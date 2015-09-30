@@ -1,0 +1,53 @@
+<title>wpbench</title>
+<script>
+function start() {
+    var resultElement = document.getElementById("result");
+    var targetElement = document.getElementById("testframe");
+
+    if (targetElement.contentDocument.location != "about:blank") {
+        targetElement.contentDocument.location = "about:blank";
+        setTimeout(start, 100);
+        return;
+    }
+
+    resultElement.value = "";
+
+    var elapsed = (function () {
+        var start = new Date();
+        return function () {
+            return new Date() - start;
+        }
+    })();
+    targetElement.contentDocument.location = document.getElementById("target-path").value;
+
+    var cb = function () {
+        var doc = targetElement.contentDocument;
+        if (doc.location == "about:blank" || doc.body == null || doc.body.clientHeight == 0) {
+            setTimeout(cb, 10);
+            return;
+        }
+        resultElement.value += "first-paint: " + elapsed() + " msec\n";
+        targetElement.contentWindow.addEventListener("load", function () {
+            resultElement.value += "load: " + elapsed() + " msec\n";
+        });
+    };
+    setTimeout(cb, 10);
+}
+</script>
+<body>
+<h1>wpbench - benchmark the load timings of a web page</h1>
+<hr>
+<table border=0>
+<form onsubmit="start(); return false">
+<tr><th align=right>Test URL Path:<td><input id="target-path" value="/" size=40>
+<input type="submit" value="Start">
+<tr><th align=right valign=top>Results:<td><textarea id="result" rows=4 cols=40></textarea>
+</form>
+</table>
+<p>
+The iframe below is used for loading the test page.<br>
+Note: you may need to restart the server and the browser, clear the cache to obtain repetitive results.
+<hr>
+<iframe id="testframe" src="about:blank" width="80%" height="20%" border="1"></iframe>
+<hr>
+Copyright &copy; 2015 Kazuho Oku
