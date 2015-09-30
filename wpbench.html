@@ -18,6 +18,11 @@ function start() {
             return new Date() - start;
         }
     })();
+
+    targetElement.contentWindow.addEventListener("unload", function () {
+        resultElement.value += "unload: " + elapsed() + " msec\n";
+    });
+
     targetElement.contentDocument.location = document.getElementById("target-path").value;
 
     var cb = function () {
