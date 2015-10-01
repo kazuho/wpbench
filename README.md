@@ -1,6 +1,6 @@
 # wpbench - collect the load timings of a web page
 
-Web-site performance is a crucial factor for succeeding in the Web business.
+Web-site performance is a crucial factor to succeeding in the Web business.
 According to [a research conducted by Microsoft](http://radar.oreilly.com/2009/07/velocity-making-your-site-fast.html), 500msec slowdown in Bing causes their revenue go down by 1.2%.
 
 The tool collects the following metrics required for tuning web-site performance.
