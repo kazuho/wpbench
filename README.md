@@ -10,6 +10,7 @@ Event | Description
 ----- | -----------
 unload | timing when the browser switches to the destination page; the new page will be blank until
 first-paint | timing when some content of the destination page is rendered by the web browser
+DOMContentLoaded | timing when the entier HTML is laid out
 load | timing when all the downloads are complete
 
 It is known to work with: Chrome, Firefox, Safari.
