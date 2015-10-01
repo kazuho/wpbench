@@ -13,3 +13,11 @@ first-paint | timing when some content of the destination page is rendered by th
 load | timing when all the downloads are complete
 
 It is known to work with: Chrome, Firefox, Safari.
+
+How-to
+------
+
+1. upload _wpbench.html_ to your web-site
+1. open the uploaded HTML
+1. enter the path of the web-page you want to take the benchmark
+1. hit the _start_ button
