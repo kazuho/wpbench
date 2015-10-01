@@ -32,6 +32,9 @@ function start() {
             return;
         }
         resultElement.value += "first-paint: " + elapsed() + " msec\n";
+        targetElement.contentWindow.addEventListener("DOMContentLoaded", function () {
+            resultElement.value += "DOMContentLoaded: " + elapsed() + " msec\n";
+        });
         targetElement.contentWindow.addEventListener("load", function () {
             resultElement.value += "load: " + elapsed() + " msec\n";
         });
@@ -46,7 +49,7 @@ function start() {
 <form onsubmit="start(); return false">
 <tr><th align=right>Test URL Path:<td><input id="target-path" value="/" size=40>
 <input type="submit" value="Start">
-<tr><th align=right valign=top>Results:<td><textarea id="result" rows=4 cols=40></textarea>
+<tr><th align=right valign=top>Results:<td><textarea id="result" rows=5 cols=40></textarea>
 </form>
 </table>
 <p>
