@@ -1,5 +1,48 @@
 <title>wpbench</title>
 <script>
+function absurl(doc, href) {
+    var a = doc.createElement("a");
+    a.href = href;
+    return a.href;
+}
+
+function cssIsReady(doc, href) {
+    var i, sheets = doc.styleSheets;
+    for (i = 0; i != sheets.length; ++i) {
+        if (sheets[i].href == href)
+            return true;
+    }
+    return false;
+}
+
+function getStyleRefs(doc) {
+    var refs = [];
+    var nodesInHead = doc.head.childNodes;
+    for (var i = 0; i != nodesInHead.length; ++i) {
+        var node = nodesInHead[i];
+        if (node.nodeType != 1)
+            continue;
+        if (node.tagName.match(/^link$/i) == null)
+            continue;
+        if ((t = node.getAttribute("rel")) == null || t.match(/^\s*stylesheet\s*$/i) == null)
+            continue;
+        if ((t = node.getAttribute("media")) != null && t.match(/^\s*(all|screen)\s*$/i) == null)
+            continue;
+        if ((t = node.getAttribute("href")) == null)
+            continue;
+        refs.push(absurl(doc, t));
+    }
+    return refs;
+}
+
+function allCSSAreReady(doc, refs) {
+    for (var i = 0; i != refs.length; ++i) {
+        if (!cssIsReady(doc, refs[i]))
+            return false;
+    }
+    return true;
+}
+
 function start() {
     var resultElement = document.getElementById("result");
     var targetElement = document.getElementById("testframe");
@@ -19,27 +62,46 @@ function start() {
         }
     })();
 
+    var pollTimers = (function () {
+        var styleRefs = null;
+        var waitForCSS = function () {
+            if (styleRefs == null)
+                styleRefs = getStyleRefs(targetElement.contentDocument);
+            if (allCSSAreReady(targetElement.contentDocument, styleRefs)) {
+                resultElement.value += "loaded CSS in <head>: " + elapsed() + " msec\n";
+                return;
+            }
+            setTimeout(waitForCSS, 10);
+        };
+        var waitForBody = function () {
+            if (targetElement.contentDocument.body != null) {
+                resultElement.value += "parsed <head>: " + elapsed() + " msec\n";
+                if (navigator.userAgent.match(/Firefox\//) == null)
+                    waitForCSS();
+                return;
+            }
+            setTimeout(waitForBody, 10);
+        };
+        return waitForBody;
+    })();
+
     targetElement.contentWindow.addEventListener("unload", function () {
         resultElement.value += "unload: " + elapsed() + " msec\n";
+        setTimeout(function () {
+            if (targetElement.contentDocument.location == "about:blank") {
+                alert("failed to wait until unload complete");
+                return;
+            }
+            pollTimers();
+            targetElement.contentWindow.addEventListener("DOMContentLoaded", function () {
+                resultElement.value += "DOMContentLoaded: " + elapsed() + " msec\n";
+            });
+            targetElement.contentWindow.addEventListener("load", function () {
+                resultElement.value += "load: " + elapsed() + " msec\n";
+            });
+        }, 0);
     });
-
     targetElement.contentDocument.location = document.getElementById("target-path").value;
-
-    var cb = function () {
-        var doc = targetElement.contentDocument;
-        if (doc.location == "about:blank" || doc.body == null || doc.body.clientHeight == 0) {
-            setTimeout(cb, 10);
-            return;
-        }
-        resultElement.value += "first-paint: " + elapsed() + " msec\n";
-        targetElement.contentWindow.addEventListener("DOMContentLoaded", function () {
-            resultElement.value += "DOMContentLoaded: " + elapsed() + " msec\n";
-        });
-        targetElement.contentWindow.addEventListener("load", function () {
-            resultElement.value += "load: " + elapsed() + " msec\n";
-        });
-    };
-    setTimeout(cb, 10);
 }
 </script>
 <body>
