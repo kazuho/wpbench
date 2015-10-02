@@ -11,7 +11,7 @@ Event | Description
 unload | timing when the browser switches to the destination page (which will be blank at this moment)
 parsed &lt;head&gt; | when parsing of &lt;head&gt; completes (indicates that all scripts in head have been loaded)
 loaded CSS in &lt;head&gt; | when all the stylesheets in &lt;head&gt; have been loaded; this is essentially when the browser becomes capable of rendering something
-DOMContentLoaded | timing when the entier HTML is laid out
+DOMContentLoaded | timing when the entire HTML is laid out
 load | timing when all the downloads are complete
 
 It is known to work with: Chrome, Firefox, Safari.
