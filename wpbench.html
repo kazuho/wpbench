@@ -68,14 +68,14 @@ function start() {
             if (styleRefs == null)
                 styleRefs = getStyleRefs(targetElement.contentDocument);
             if (allCSSAreReady(targetElement.contentDocument, styleRefs)) {
-                resultElement.value += "loaded CSS in <head>: " + elapsed() + " msec\n";
+                resultElement.value += "css-loaded: " + elapsed() + " msec\n";
                 return;
             }
             setTimeout(waitForCSS, 10);
         };
         var waitForBody = function () {
             if (targetElement.contentDocument.body != null) {
-                resultElement.value += "parsed <head>: " + elapsed() + " msec\n";
+                resultElement.value += "head-parsed: " + elapsed() + " msec\n";
                 if (navigator.userAgent.match(/Firefox\//) == null)
                     waitForCSS();
                 return;

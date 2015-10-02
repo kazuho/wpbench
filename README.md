@@ -9,8 +9,8 @@ The primary goal of performance tuning will be to provide _some_ visible respons
 Event | Description 
 ----- | -----------
 unload | timing when the browser switches to the destination page (which will be blank at this moment)
-parsed &lt;head&gt; | when parsing of &lt;head&gt; completes (indicates that all scripts in head have been loaded)
-loaded CSS in &lt;head&gt; | when all the stylesheets in &lt;head&gt; have been loaded; this is essentially when the browser becomes capable of rendering something
+head-parsed | when parsing of &lt;head&gt; completes (indicates that all scripts in head have been loaded)
+css-loaded | when all the stylesheets in &lt;head&gt; have been loaded; this is essentially when the browser becomes capable of rendering something
 DOMContentLoaded | timing when the entire HTML is laid out
 load | timing when all the downloads are complete
 
